@@ -20,6 +20,6 @@ nav{
     @apply text-4xl font-bold md:text-5xl md:leading-snug my-2;
 }
 
-.subtitle{
+/*.subtitle{
     @apply text-red uppercase tracking-wide font-semibold text-lg;
-}
+} */
