@@ -9,11 +9,11 @@ const Home = () => {
     <div>
       <Banner />
       <Category />
-      <Service />
       <SpecialProduct />
       <Testimonial />
+      <Service />
     </div>
-  )
+  );
 }
 
 export default Home

@@ -11,19 +11,19 @@ const Navbar = () => {
           <summary>Category</summary>
           <ul>
             <li>
-              <a href="">All</a>
+              <a href="#all">All</a>
             </li>
             <li>
-              <a href="">Clothing</a>
+              <a href="#clothing">Clothing</a>
             </li>
             <li>
-              <a href="">Accessories</a>
+              <a href="#accessories">Accessories</a>
             </li>
             <li>
-              <a href="">Gadgets</a>
+              <a href="#gadgets">Gadgets</a>
             </li>
             <li>
-              <a href="">Swag</a>
+              <a href="#swag">Swag</a>
             </li>
           </ul>
         </details>
@@ -33,24 +33,30 @@ const Navbar = () => {
           <summary>Service</summary>
           <ul>
             <li>
-              <a href="">Order Online</a>
+              <a href="#order-online">Order Online</a>
             </li>
             <li>
-              <a href="">Order Tracking</a>
+              <a href="#order-tracking">Order Tracking</a>
             </li>
           </ul>
         </details>
       </li>
       <li>
-        <a href="/">Promotions</a>
+        <a href="#promotions">Promotions</a>
       </li>
     </>
   );
+
   return (
-    <div className="navbar bg-base-100">
-      <div className="navbar-start">
+    <div className="navbar bg-base-100 shadow-lg">
+      {/* Navbar Start */}
+      <div className="navbar-start flex items-center space-x-2">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <button
+            tabIndex={0}
+            className="btn btn-ghost lg:hidden"
+            aria-label="Toggle navigation menu"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -65,7 +71,7 @@ const Navbar = () => {
                 d="M4 6h16M4 12h8m-8 6h16"
               />
             </svg>
-          </div>
+          </button>
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
@@ -73,15 +79,30 @@ const Navbar = () => {
             {navItem}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">SE Souvenir Shop</a>
-        <img src="/logo.png" alt="logo" className="h-6 lg:h-12 pr-1 mx-auto" />
+        <div className="flex items-center space-x-2">
+          <a className="text-xl font-bold">SE Souvenir Shop</a>
+          <img
+            src="./images/home/logo.png"
+            alt="logo"
+            className="h-6 lg:h-12 pr-1"
+          />
+        </div>
       </div>
+
+      {/* Navbar Center */}
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{navItem}</ul>
       </div>
-      <div className="flex-none">
+
+      {/* Navbar End */}
+      <div className="navbar-end flex items-center space-x-4">
+        {/* Cart */}
         <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+          <button
+            tabIndex={0}
+            className="btn btn-ghost btn-circle"
+            aria-label="Cart"
+          >
             <div className="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +120,7 @@ const Navbar = () => {
               </svg>
               <span className="badge badge-sm indicator-item">8</span>
             </div>
-          </div>
+          </button>
           <div
             tabIndex={0}
             className="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow"
@@ -113,19 +134,21 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+
+        {/* User Profile */}
         <div className="dropdown dropdown-end">
-          <div
+          <button
             tabIndex={0}
-            role="button"
             className="btn btn-ghost btn-circle avatar"
+            aria-label="User Profile"
           >
             <div className="w-10 rounded-full">
               <img
-                alt="Tailwind CSS Navbar component"
+                alt="User Profile"
                 src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
               />
             </div>
-          </div>
+          </button>
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
