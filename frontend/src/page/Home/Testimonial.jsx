@@ -7,7 +7,7 @@ const Testimonial = () => {
         <div className="md:w-1/2">
           <img src="/images/home/testimonials/testimonials.png" alt="" />
         </div>
-        <div className="md:w1/2">
+        <div className="md:w-1/2">
           <div className="text-left md:w-4/5">
             <p className="subtitle"> Testimonials</p>
             <h2 className="title"> What our customer say about us</h2>
