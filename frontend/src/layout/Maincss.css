@@ -20,3 +20,9 @@ nav {
 .subtitle {
   @apply text-red-500 uppercase tracking-wide font-semibold text-lg;
 }
+
+.active{
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  color: rgb(139, 20, 2);
+}

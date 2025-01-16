@@ -4,26 +4,26 @@ const Navbar = () => {
   const navItem = (
     <>
       <li>
-        <a href="#home">Home</a>
+        <a href="/">Home</a>
       </li>
       <li tabIndex={0}>
         <details>
           <summary>Category</summary>
           <ul>
             <li>
-              <a href="#all">All</a>
+              <a href="/shop">All</a>
             </li>
             <li>
-              <a href="#clothing">Clothing</a>
+              <a href="/shop?clothing">Clothing</a>
             </li>
             <li>
-              <a href="#accessories">Accessories</a>
+              <a href="/shop?accessories">Accessories</a>
             </li>
             <li>
-              <a href="#gadgets">Gadgets</a>
+              <a href="/shop?gadgets">Gadgets</a>
             </li>
             <li>
-              <a href="#swag">Swag</a>
+              <a href="/shop?swag">Swag</a>
             </li>
           </ul>
         </details>
