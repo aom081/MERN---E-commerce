@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const ProductSchema = new Schema({
-  title: String,
-  summary: String,
-  content: String,
-  cover: String,
-  author: { type: Schema.Types.ObjectId, ref: "User" },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  image: { type: String, required: true },
+  category: { type: String, required: true },
 });
 
 const ProductModel = module( "Product", ProductSchema);

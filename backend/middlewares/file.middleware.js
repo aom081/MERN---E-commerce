@@ -53,7 +53,7 @@ async function uploadToFirebase(req, res, next) {
   //save location
   const storageRef = ref(
     firebaseStorage,
-    `upload/${req?.file?.buffer?.originalname}`
+    `2567-component/upload/${req?.file?.buffer?.originalname}`
   );
   //file type
   const metadata = {

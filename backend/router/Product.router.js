@@ -19,7 +19,13 @@ router.get("/:id", productController.getProductById);
 //http://localhost:5000/api/v1/product/id
 router.delete("/:id", authJwt.verifyToken, productController.getProductById);
 //http://localhost:5000/api/v1/product/id
-router.put("/:id", authJwt.verifyToken, upload, productController.updateProduct);
+router.put(
+  "/:id",
+  authJwt.verifyToken,
+  upload,
+  uploadToFirebase,
+  productController.updateProduct
+);
 //http://localhost:5000/api/v1/author/id
 router.get("/author/:id", productController.getProductByAuthor);
 module.exports = router;
