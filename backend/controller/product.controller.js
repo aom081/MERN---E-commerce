@@ -4,39 +4,58 @@ require("dotenv").config();
 const secret = process.env.SECRET;
 
 exports.createProduct = async (req, res) => {
-  const token = req.headers["x-access-token"];
-  if (!token) {
-    return res.status(401).json({ message: "Token missing" });
-  }
-  //File upload
+  /**
+    #swagger.tags = ['Product']
+    #swagger.summary = "Create a new product"
+    #swagger.description = 'Endpoint to create a new product'
+    #swagger.consumes = ['multipart/form-data']
+    #swagger.parameters['file'] = {
+       in:'formData',
+       type:'file',
+       required:true,
+       description:'Image to upload to Firebase Storage and get its url'
+    }
+    #swagger.requestBody = {
+       required:true,
+       content:{
+         "multipart/form-data":{
+           schema:{
+             $ref:"#components/schemas/NewProduct"
+           }
+         }
+       }
+    }
+    #swagger.response[200] = {
+       schema:{ "$ref": "#components/schemas/ProductResponse"},
+       description: "Product created successfully"
+    }
+   */
   if (!req.file) {
-    return res.status(400).json({ message: "No Image uploaded" });
+    return res.status(400).json({ message: "Image is required" });
   }
-  const { path } = req.file.firebaseUrl;
-  const author = req.userId;
-  const { title, summary, content } = req.body;
-  if (!title || !summary || !content) {
+  const firebaseUrl = req.file.firebaseUrl;
+  const { name, description, category, price } = req.body;
+  if (!name || !description || !category || !price) {
     return res.status(400).json({ message: "Please fill in all fields" });
   }
-
   try {
     const ProductDoc = await ProductModel.create({
-      title,
-      summary,
-      content,
-      cover: req.file.firebaseUrl,
-      author,
+      name,
+      description,
+      category,
+      image: firebaseUrl,
+      price,
     });
     res.json(ProductDoc);
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     res.status(500).json({ message: "Failed to create Product" });
   }
 };
 
 exports.getProduct = async (req, res) => {
   try {
-    const Product = await ProductModel.find()
+    const Product = await ProductModel.find();
     //SELECT * FROM Product WHERE Product.author =USER._id
     if (!Product) {
       return res.status(404).json({ message: "No Product found" });
@@ -51,9 +70,7 @@ exports.getProduct = async (req, res) => {
 exports.getProductById = async (req, res) => {
   const { id } = req.params;
   try {
-    const ProductDoc = await ProductModel.findById(id).populate("author", [
-      "username",
-    ]);
+    const ProductDoc = await ProductModel.findById(id);
     if (!ProductDoc) {
       return res.status(404).send({ message: "Product not found" });
     }
@@ -66,11 +83,10 @@ exports.getProductById = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   const { id } = req.params;
-  const authorId = req.userId;
   try {
     const ProductDoc = await ProductModel.findById(id);
-    if (authorId !== ProductDoc.author.toString()) {
-      res.status(403).send({ message: "You can not delete Product" });
+    if (!ProductDoc) {
+      res.status(404).send({ message: "You can not delete Product" });
       return;
     }
     await ProductDoc.deleteOne();
@@ -84,24 +100,25 @@ exports.deleteProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
   if (!id) return res.status(404).json({ message: "Product not provided" });
-  const authorId = req.userId;
+
   try {
     const ProductDoc = await ProductModel.findById(id);
-    if (authorId !== ProductDoc.author.toString()) {
-      res.status(403).send({ message: "You can not update Product" });
+    if (!ProductDoc) {
+      res.status(404).send({ message: "You can not update Product" });
       return;
     }
 
-    const { title, summary, content } = req.body;
-    if (!title || !summary || !content) {
+    const { name, category, description, price } = req.body;
+    if (!name || !category || !description || !price) {
       return res.status(400).json({ message: "Please fill in all fields" });
     }
-    ProductDoc.title = title;
-    ProductDoc.summary = summary;
-    ProductDoc.content = content;
+    ProductDoc.name = name;
+    ProductDoc.category = category;
+    ProductDoc.description = description;
+    ProductDoc.price = price;
     if (req.file) {
-      const { path } = req.file;
-      ProductDoc.cover = path;
+      const path = req.file.firebaseUrl;
+      ProductDoc.image = path;
     }
     await ProductDoc.save();
     res.json({ message: "Product updated successfully" });
@@ -114,9 +131,10 @@ exports.updateProduct = async (req, res) => {
 exports.getProductByAuthor = async (req, res) => {
   const { id } = req.params;
   try {
-    const ProductDoc = await ProductModel.find({ author: id }).populate("author", [
-      "username",
-    ]);
+    const ProductDoc = await ProductModel.find({ author: id }).populate(
+      "author",
+      ["username"]
+    );
     if (!ProductDoc) {
       return res.status(404).send({ message: "author not found" });
     }
