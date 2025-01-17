@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from "react";
 import productService from "../../service/product.service";
 import Card from "../../components/Card";
-
+import { useSearchParams } from "react-router"
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [filteredItem, setFilteredItem] = useState([]);
   const [sortOption, setSortOption] = useState("default");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchParam, setSearchParam] = useSearchParams("search");
   const [itemPerPage, setItemPerPage] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
+  const categoryQuery = searchParam.get(" category") || "all";
+  const itemPerPageQuery = searchParam.get("itemsPerPage") || 4;
+  useEffect(() => {
+    setSelectedCategory(categoryQuery);
+    setItemPerPage(itemPerPageQuery);
+  }, [categoryQuery, itemPerPageQuery]);
   useEffect(() => {
     const fetchData = async () => {
       const response = await productService.getAllProducts();
@@ -30,7 +37,8 @@ const ProductList = () => {
         : products.filter((item) => item.category === category);
     setFilteredItem(filtered);
     handleSortChange(setSortOption, filtered);
-    setSelectedCategory(category)
+    setSearchParam({['category']:category})
+    setSelectedCategory(category);
   };
 
   const handleSortChange = (option, products) => {
@@ -60,7 +68,7 @@ const ProductList = () => {
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
   const currentItem = filteredItem.slice(indexOfFirstItem, indexOfLastItem);
-  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber)
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
   return (
     <div className="section-container">
       <div className="flex md:flex-row md:justify-between flex-col flex-wrap items-center space-y-3 mb-8">
@@ -106,24 +114,24 @@ const ProductList = () => {
         </div>
         {/**Pagination */}
         <div className="section-container flex flex-row items-center justify-center my-8 flex-wrap gap-2">
-            <div className="flex justify-center items-center my-8 flex-wrap gap-2">
-          {Array.from({
-            length: Math.ceil(filteredItem.length / itemPerPage),
-          }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handlePageChange(index+1)}
-              className={`mx-1 px-4
+          <div className="flex justify-center items-center my-8 flex-wrap gap-2">
+            {Array.from({
+              length: Math.ceil(filteredItem.length / itemPerPage),
+            }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`mx-1 px-4
                         py-2 rounded-full ${
                           currentPage === index
                             ? "bg-red-950 text-white"
                             : "bg-gray"
                         }`}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>
