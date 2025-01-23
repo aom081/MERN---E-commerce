@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
-import googleIcon from "./icons/GoogleIcon";
-import { FaFacebook, FaGoogle } from "react-icons/fa6";
-import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import AuthProvider from "../context/Authcontext";
+import AuthProvider from "../context/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
+import SocialLogin from "./SocialLogin";
 
 const Modal = ({ name }) => {
   const { login } = useContext(AuthContext);
@@ -38,6 +36,8 @@ const Modal = ({ name }) => {
         console.log(error);
       });
   };
+
+  
   return (
     <div>
       <dialog id={name} className="modal modal-bottom sm:modal-middle">
@@ -95,17 +95,7 @@ const Modal = ({ name }) => {
                 </a>
               </p>
             </form>
-            <div className="text-center space-x-3 mb-5">
-              <button className="btn btn-ghost btn-circle hover:bg-red hover:text-white">
-                <FaGoogle className="w-6 h-6" />
-              </button>
-              <button className="btn btn-ghost btn-circle hover:bg-red hover:text-white">
-                <FaGithub className="w-6 h-6" />
-              </button>
-              <button className="btn btn-ghost btn-circle hover:bg-red hover:text-white">
-                <FaFacebook className="w-6 h-6" />
-              </button>
-            </div>
+            <SocialLogin/>
           </div>
         </div>
       </dialog>

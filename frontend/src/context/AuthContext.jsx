@@ -1,12 +1,15 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
-import app from "../configs/firebase.config";
+import app from "../config/firebase.config";
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  GithubAuthProvider,
+  FacebookAuthProvider,
 } from "firebase/auth";
 
 const AuthProvider = ({ children }) => {
@@ -22,11 +25,31 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     return signOut(auth);
   };
+
+  const signUpWithGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
+
+  const signUpWithGithub = () => {
+    const provider = new GithubAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
+
+   const signUpWithFacebook = () => {
+     const provider = new FacebookAuthProvider();
+     return signInWithPopup(auth, provider);
+   };
+
+
   const authInfo = {
     user,
     createUser,
     login,
     logout,
+    signUpWithGoogle,
+    signUpWithGithub,
+    signUpWithFacebook,
   };
   //check if user is logged in
   useEffect(() => {

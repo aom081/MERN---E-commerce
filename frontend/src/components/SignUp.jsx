@@ -81,7 +81,7 @@ const SignUp = () => {
           </div>
           <p className="text-center my-2">
             Have an account?
-            <a href="/singin" className="underline text-md ml-1">
+            <a href="/signin" className="underline text-md ml-1">
               Sign In Now
             </a>
           </p>
@@ -103,4 +103,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
