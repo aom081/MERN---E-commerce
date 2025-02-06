@@ -5,7 +5,7 @@ const getAllCartItem = async () => {
   return await api.get(`${API_URL}`);
 };
 const getCartItemByEmail = async (email) => {
-  return await api.get(`${API_URL}/email/${email}`);
+  return await api.get(`${API_URL}/${email}`);
 };
 const createCartItem = async (data) => {
   return await api.post(`${API_URL}`, data);
