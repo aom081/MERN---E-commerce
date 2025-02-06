@@ -54,6 +54,19 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getProduct = async (req, res) => {
+  /**
+  #swagger.tags = ['Product']
+  #swagger.summary = "Get all products"
+  #swagger.description = 'Endpoint to retrieve all products'
+  #swagger.responses[200] = {
+    description: "List of all products",
+    schema: { "$ref": "#components/schemas/ProductResponse" }
+  }
+  #swagger.responses[404] = {
+    description: "No products found"
+  }
+*/
+
   try {
     const Product = await ProductModel.find();
     //SELECT * FROM Product WHERE Product.author =USER._id
@@ -68,6 +81,24 @@ exports.getProduct = async (req, res) => {
 };
 
 exports.getProductById = async (req, res) => {
+  /**
+  #swagger.tags = ['Product']
+  #swagger.summary = "Delete a product"
+  #swagger.description = 'Delete a product by its ID'
+  #swagger.parameters['id'] = {
+    in: 'path',
+    required: true,
+    description: 'Product ID',
+    type: 'string'
+  }
+  #swagger.responses[200] = {
+    description: "Product deleted successfully"
+  }
+  #swagger.responses[404] = {
+    description: "Product not found"
+  }
+*/
+
   const { id } = req.params;
   try {
     const ProductDoc = await ProductModel.findById(id);
@@ -82,6 +113,24 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.deleteProduct = async (req, res) => {
+  /**
+  #swagger.tags = ['Product']
+  #swagger.summary = "Delete a product"
+  #swagger.description = 'Delete a product by its ID'
+  #swagger.parameters['id'] = {
+    in: 'path',
+    required: true,
+    description: 'Product ID',
+    type: 'string'
+  }
+  #swagger.responses[200] = {
+    description: "Product deleted successfully"
+  }
+  #swagger.responses[404] = {
+    description: "Product not found"
+  }
+*/
+
   const { id } = req.params;
   try {
     const ProductDoc = await ProductModel.findById(id);
@@ -98,6 +147,39 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
+  /**
+  #swagger.tags = ['Product']
+  #swagger.summary = "Update a product"
+  #swagger.description = 'Update product details by ID'
+  #swagger.consumes = ['multipart/form-data']
+  #swagger.parameters['file'] = {
+    in:'formData',
+    type:'file',
+    required:false,
+    description:'Image to upload to Firebase Storage'
+  }
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "multipart/form-data": {
+        schema: {
+          $ref: "#components/schemas/NewProduct"
+        }
+      }
+    }
+  }
+  #swagger.responses[200] = {
+    description: "Product updated successfully",
+    schema: { "$ref": "#components/schemas/ProductResponse" }
+  }
+  #swagger.responses[400] = {
+    description: "Missing required fields"
+  }
+  #swagger.responses[404] = {
+    description: "Product not found"
+  }
+*/
+
   const { id } = req.params;
   if (!id) return res.status(404).json({ message: "Product not provided" });
 
@@ -129,6 +211,25 @@ exports.updateProduct = async (req, res) => {
 };
 
 exports.getProductByAuthor = async (req, res) => {
+  /**
+  #swagger.tags = ['Product']
+  #swagger.summary = "Get products by author"
+  #swagger.description = 'Retrieve all products created by a specific author'
+  #swagger.parameters['id'] = {
+    in: 'path',
+    required: true,
+    description: 'Author ID',
+    type: 'string'
+  }
+  #swagger.responses[200] = {
+    description: "List of products by author",
+    schema: { "$ref": "#components/schemas/ProductResponse" }
+  }
+  #swagger.responses[404] = {
+    description: "Author not found"
+  }
+*/
+
   const { id } = req.params;
   try {
     const ProductDoc = await ProductModel.find({ author: id }).populate(

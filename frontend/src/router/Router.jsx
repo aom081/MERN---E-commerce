@@ -4,6 +4,8 @@ import Home from "../page/Home/Home";
 import Shop from "../page/Shop/Index";
 import SignUp from "../components/SignUp";
 import SignIn from "../components/SignIn";
+import Setting from "../page/Setting/updateProfile";
+import ProfileIndex from "../page/Profile/index";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +30,14 @@ const router = createBrowserRouter([
       {
         path: "/signin",
         element: <SignIn />,
+      },
+      {
+        path: "/updateProfile",
+        element: <Setting />,
+      },
+      {
+        path: "/ProfileIndex",
+        element: <ProfileIndex />,
       },
     ],
   },

@@ -1,10 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "../context/Authcontext";
+import CartService from "../service/cart.service";
+import useCart from "../hook/useCart";
+import Swal from "sweetalert2";
+
 const Card = ({ item }) => {
   const { id, name, image, description, category, price } = item;
+  const {user} = useContext(AuthContext);
+  const [cart,refetch] = useCart();
   const [isHeartFiled, setIsHeartFiled] = useState(false);
   const handleHeartClick = () => {
     setIsHeartFiled(!isHeartFiled);
   };
+
+  const handleAddToCart = async () => {
+    if (!user || !user.email) {
+      Swal.fire({
+        title: "Error",
+        text: "Please login to add item to cart",
+        icon: "error",
+        });
+        return;
+    }
+    try {
+      const cartItem = {
+        productId: id,
+        email: user.email,
+        quantity: 1,
+        name,
+        price,
+        image,
+      }
+      const response = await CartService.createCartItem(cartItem);
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Success",
+          text: "Item added to cart successfully",
+          icon: "success",
+          });
+          refetch();
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Failed to add item to cart",
+        icon: "error",
+      })
+    }
+  }
   return (
     <div className="card shadow-xl relative mr-5 md:my-5 h-120">
       <div
