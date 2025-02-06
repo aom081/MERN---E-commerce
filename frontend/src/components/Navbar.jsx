@@ -1,5 +1,5 @@
 import Profile from "./Profile";
-import AuthProvider from "../context/AuthContext";
+import AuthProvider from "../context/Authcontext";
 import { useContext } from "react";
 import UserIcon from "./icons/UserIcon";
 import Modal from "./Modal";
