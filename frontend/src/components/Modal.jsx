@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import AuthProvider from "../context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
 import SocialLogin from "./SocialLogin";
@@ -22,7 +22,7 @@ const Modal = ({ name }) => {
     login(data.email, data.password)
       .then((result) => {
         const user = result.user;
-        console.log(user);
+
         Swal.fire({
           icon: "success",
           title: "Login Successful",
@@ -37,7 +37,6 @@ const Modal = ({ name }) => {
       });
   };
 
-  
   return (
     <div>
       <dialog id={name} className="modal modal-bottom sm:modal-middle">
@@ -95,7 +94,7 @@ const Modal = ({ name }) => {
                 </a>
               </p>
             </form>
-            <SocialLogin/>
+            <SocialLogin />
           </div>
         </div>
       </dialog>
