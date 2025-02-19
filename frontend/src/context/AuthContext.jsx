@@ -1,6 +1,9 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
 import app from "../configs/firebase.config";
+import { Cookies } from "react-cookie";
+
+const cookies = new Cookies();
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -14,6 +17,7 @@ import {
   updateProfile,
   // linkWithPopup,
 } from "firebase/auth";
+import UserService from "../services/user.service";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -21,7 +25,10 @@ const AuthProvider = ({ children }) => {
   const auth = getAuth(app);
   // const googleProvider = new GoogleAuthProvider();
   // const githubProvider = new GithubAuthProvider();
-
+  const getUser = () => {
+    const userInfo = cookies.get("user") || null;
+    return userInfo;
+  };
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
@@ -49,21 +56,11 @@ const AuthProvider = ({ children }) => {
       photoURL: photoURL,
     });
   };
-  // const linkAccount = (currentUser) => {
-  //   linkWithPopup(currentUser, googleProvider)
-  //     .then((result) => {
-  //       const credential = GoogleAuthProvider.credentialFromResult(result);
-  //       console.log(credential);
-  //       const user = result.user;
-  //       console.log(user);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+
   const authInfo = {
     user,
     createUser,
+    getUser,
     login,
     logout,
     signUpWithGoogle,
@@ -75,11 +72,20 @@ const AuthProvider = ({ children }) => {
   };
   //check if user is logged in
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         setUser(currentUser);
         setIsLoading(false);
+        const { email } = currentUser;
+        const response = await UserService.signJwt(email);
+
+        if (response.data) {
+          console.log(response.data);
+          cookies.set("user", response.data);
+        }
+      } else {
+        cookies.remove("user");
       }
       setIsLoading(false);
     });

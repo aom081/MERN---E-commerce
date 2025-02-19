@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
+
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../context/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
 import SocialLogin from "./SocialLogin";
-import UserService from "../services/user.service";
 
-const SignUp = () => {
-  const { createUser } = useContext(AuthContext);
+const SignIn = () => {
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
@@ -20,15 +20,13 @@ const SignUp = () => {
   const onSubmit = (data) => {
     console.log(data);
 
-    createUser(data.email, data.password)
-      .then(async (result) => {
+    login(data.email, data.password)
+      .then((result) => {
         const user = result.user;
         console.log(user);
-        //TODO Sign up to local backend
-        await UserService.addUser(user.email);
         Swal.fire({
           icon: "success",
-          title: "Register Successful",
+          title: "Login Successful",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -78,14 +76,14 @@ const SignUp = () => {
           <div className="form-control mt-6">
             <input
               type="submit"
-              value={"Sign Up"}
+              value={"Log in"}
               className="btn bg-red ml-1 text-white"
             />
           </div>
           <p className="text-center my-2">
-            Have an account?
-            <a href="/signin" className="underline text-md ml-1">
-              Sign In Now
+            Don&apos;t have an account?
+            <a href="/signup" className="underline text-md ml-1">
+              Sign Up Now
             </a>
           </p>
         </form>
@@ -95,4 +93,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;
