@@ -1,37 +1,83 @@
-import React from 'react'
+/* eslint-disable no-unused-vars */
+import { useContext } from "react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { AuthContext } from "../../context/Authcontext";
+import Swal from "sweetalert2";
 
 const updateProfile = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location?.state?.from?.pathname || "/";
+  const { updateUserProfile, user } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    const name = data.name;
+    const photoURL = data.photoURL;
+    updateUserProfile({ name, photoURL })
+      .then(() => {
+        // alert('Profile Updated!')
+        Swal.fire({
+          icon: "success",
+          title: "Profile Updated!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        navigate(from, { replace: true });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
-    <div className="hero bg-base-200 min-h-screen">
-    <div className="hero-content flex-col lg:flex-row-reverse">
-      <div className="text-center lg:text-left">
-        <h1 className="text-5xl font-bold">Update Profile</h1>
-        <img
-      src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-      className="max-w-sm rounded-lg shadow-2xl" />
-      </div>
-      <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-        <form className="card-body">
+    <div className="flex items-center justify-center h-screen">
+      <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+        <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
+          <h3 className="font-bold">Update Your Profile</h3>
           <div className="form-control">
             <label className="label">
               <span className="label-text">Name</span>
             </label>
-            <input type="name" placeholder="Your name" className="input input-bordered" required />
+            <input
+              type="text"
+              placeholder="name"
+              className="input input-bordered"
+              value={user?.displayName}
+              required
+              {...register("name")}
+            />
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text">upload Profile Photo</span>
+              <span className="label-text">Upload Profile Photo</span>
             </label>
-            <input type="file" className="file-input file-input-bordered w-full max-w-xs" />
+            <input
+              type="text"
+              placeholder="Photo URL"
+              className="input input-bordered"
+              value={user?.photoURL}
+              required
+              {...register("photoURL")}
+            />
           </div>
+
           <div className="form-control mt-6">
-            <button className="btn btn-secondary">Update</button>
+            <input
+              type="submit"
+              value="Update"
+              className="btn bg-red text-white"
+            />
           </div>
         </form>
       </div>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default updateProfile
+export default updateProfile;

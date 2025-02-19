@@ -1,11 +1,17 @@
 import { createBrowserRouter } from "react-router";
-import MainLayout from "../layout/Main";
-import Home from "../page/Home/Home";
-import Shop from "../page/Shop/Index";
+import MainLayout from "../layouts/Main";
+import DashboardLayout from "../layouts/DashboardLayout";
+import Home from "../pages/Home/Index";
+import Shop from "../pages/Shop/Index";
+import Cart from "../pages/Cart/Index";
 import SignUp from "../components/SignUp";
-import SignIn from "../components/SignIn";
-import Setting from "../page/Setting/updateProfile";
-import ProfileIndex from "../page/Profile/index";
+import SignIn from "../components/SingIn";
+import Setting from "../pages/Setting/Index";
+import Profile from "../pages/Profile/Index";
+import ProtectPage from "../pages/ProtectPage/Index";
+import Dashboard from "../pages/Dashboard/Index";
+import AddProduct from "../pages/AddProduct/Index";
+import ManageItems from "../pages/ManageItems/Index";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -19,9 +25,14 @@ const router = createBrowserRouter([
         path: "/shop",
         element: <Shop />,
       },
+
       {
         path: "/cart",
-        element: <Cart />,
+        element: (
+          <ProtectPage>
+            <Cart />
+          </ProtectPage>
+        ),
       },
       {
         path: "/signup",
@@ -32,12 +43,38 @@ const router = createBrowserRouter([
         element: <SignIn />,
       },
       {
-        path: "/updateProfile",
-        element: <Setting />,
+        path: "/update-profile",
+        element: (
+          <ProtectPage>
+            <Setting />
+          </ProtectPage>
+        ),
       },
       {
-        path: "/ProfileIndex",
-        element: <ProfileIndex />,
+        path: "/profile",
+        element: (
+          <ProtectPage>
+            <Profile />
+          </ProtectPage>
+        ),
+      },
+    ],
+  },
+  {
+    path: "dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "",
+        element: <Dashboard />,
+      },
+      {
+        path: "add-product",
+        element: <AddProduct />,
+      },
+      {
+        path: "manage-items",
+        element: <ManageItems />,
       },
     ],
   },

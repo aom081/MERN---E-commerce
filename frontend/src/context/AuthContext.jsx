@@ -1,20 +1,26 @@
 import { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
-import app from "../config/firebase.config";
+import app from "../configs/firebase.config";
 import {
-  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
   GithubAuthProvider,
   FacebookAuthProvider,
+  updateProfile,
+  // linkWithPopup,
 } from "firebase/auth";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth(app);
+  // const googleProvider = new GoogleAuthProvider();
+  // const githubProvider = new GithubAuthProvider();
 
   const createUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -25,23 +31,36 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     return signOut(auth);
   };
-
   const signUpWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider);
   };
-
   const signUpWithGithub = () => {
     const provider = new GithubAuthProvider();
     return signInWithPopup(auth, provider);
   };
-
-   const signUpWithFacebook = () => {
-     const provider = new FacebookAuthProvider();
-     return signInWithPopup(auth, provider);
-   };
-
-
+  const signUpWithFacebook = () => {
+    const provider = new FacebookAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
+  const updateUserProfile = ({ name, photoURL }) => {
+    return updateProfile(auth.currentUser, {
+      displayName: name,
+      photoURL: photoURL,
+    });
+  };
+  // const linkAccount = (currentUser) => {
+  //   linkWithPopup(currentUser, googleProvider)
+  //     .then((result) => {
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       console.log(credential);
+  //       const user = result.user;
+  //       console.log(user);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
   const authInfo = {
     user,
     createUser,
@@ -50,6 +69,9 @@ const AuthProvider = ({ children }) => {
     signUpWithGoogle,
     signUpWithGithub,
     signUpWithFacebook,
+    updateUserProfile,
+    isLoading,
+    // linkAccount,
   };
   //check if user is logged in
   useEffect(() => {
@@ -57,7 +79,9 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
       if (currentUser) {
         setUser(currentUser);
+        setIsLoading(false);
       }
+      setIsLoading(false);
     });
     return () => {
       return unsubscribe();
