@@ -2,7 +2,7 @@ import { FaFacebook, FaGoogle } from "react-icons/fa6";
 import React, { useContext } from "react";
 import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../context/Authcontext";
+import { AuthContext } from "../context/AuthContext";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router";
 
