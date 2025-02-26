@@ -90,7 +90,11 @@ exports.updateUser = async (req, res) => {
     return res.status(400).json({ message: "Email is required" });
   }
   try {
-    const user = await UserModel.findByIdAndUpdate(id,{email,role},{new:true});
+    const user = await UserModel.findByIdAndUpdate(
+      id,
+      { email, role },
+      { new: true }
+    );
     if (!user) {
       res.status(404).json({ message: `Not found user with id ${id}` });
     }
@@ -109,8 +113,7 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await
-    UserModel.findByIdAndDelete(id);
+    const user = await UserModel.findByIdAndDelete(id);
     if (!user) {
       res.status(404).json({ message: `Not found user with id ${id}` });
     }
@@ -121,7 +124,34 @@ exports.deleteUser = async (req, res) => {
         error.message ||
         `Something error occurred while deleting user with id ${id}`,
     });
-  } 
+  }
 };
 
-exports.makeUser = async (req, res) => {};
+exports.makeUser = async (req, res) => {
+  const { email, password, role } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+};
+
+exports.makeAdmin = async (req, res) => {
+  const { email } = req.params;
+  try {
+    const user = await UserModel.findOne({
+      email,
+    });
+    if (!user) {
+      res.status(404).json({ message: `Not found user with email ${email}` });
+    }
+    user.role = "admin";
+    await user.save();
+    res.json(user);
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message ||
+        `Something error occurred while updating user with email ${email}`,
+    });
+  }
+};
