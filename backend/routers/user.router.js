@@ -1,15 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user.controller");
-
-//http://localhost:5000/api/v1/user/sign
-router.post("/sign", userController.sign);
-router.post("/", userController.addUser);
-module.exports = router;
+const authJwt = require("../middleware/auth");
 
 //http//localhost:5000/api/v1/user/sign
 router.post("/sign", userController.sign);
-router.post("/", userController.addUser);
+router.post("/",authJwt.verifyToken, authJwt.isAdmin, userController.addUser);
 router.get("/", userController.getAllUser);
 router.put("/:id", userController.updateUser);
 router.delete("/:id", userController.deleteUser);
