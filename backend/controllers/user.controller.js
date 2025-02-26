@@ -53,3 +53,75 @@ exports.addUser = async (req, res) => {
     });
   }
 };
+
+exports.getAllUser = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message || "Something error occurred while retrieving users",
+    });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await UserModel.findById(id);
+    if (!user) {
+      res.status(404).json({ message: `Not found user with id ${id}` });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message ||
+        `Something error occurred while retrieving user with id ${id}`,
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  const id = req.params.id;
+  const { email, role } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  try {
+    const user = await UserModel.findByIdAndUpdate(id,{email,role},{new:true});
+    if (!user) {
+      res.status(404).json({ message: `Not found user with id ${id}` });
+    }
+    user.email = email;
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message ||
+        `Something error occurred while updating user with id ${id}`,
+    });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await
+    UserModel.findByIdAndDelete(id);
+    if (!user) {
+      res.status(404).json({ message: `Not found user with id ${id}` });
+    }
+    res.status(200).json({ message: "User was deleted successfully" });
+  } catch (error) {
+    res.status(500).send({
+      message:
+        error.message ||
+        `Something error occurred while deleting user with id ${id}`,
+    });
+  } 
+};
+
+exports.makeUser = async (req, res) => {};
